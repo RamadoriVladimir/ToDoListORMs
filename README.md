@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ##INSTALL NODE:
 # installs nvm (Node Version Manager)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
@@ -31,3 +32,6 @@ Uso de req.db: En lugar de interactuar directamente con Mongoose, ahora usamos e
 Funciones del modelo: Reemplazamos las funciones de Mongoose (find(), findByIdAndUpdate(), etc.) por las funciones que definimos en models/todo.js (getAllTodos, createTodo, updateTodo, deleteTodo).
 Manejo de respuestas: Después de cada operación, devolvemos la respuesta adecuada. Si la tarea no existe o no se encuentra, devolvemos un estado 404 con un mensaje.
 Con estas modificaciones, tu controlador todoController.js ahora estará adaptado para funcionar con el modelo de MySQL.
+=======
+# ToDoListORMs
+>>>>>>> de53862d0e9c3c525466ee96f9d045273045e99c
