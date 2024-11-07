@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 // Conexión a MySQL con Sequelize
 let sequelize;
+let TodoSQL;
 const initializeMySQL = async () => {
     sequelize = new Sequelize('todolist', 'root', '', {
         host: 'localhost',
@@ -11,21 +12,18 @@ const initializeMySQL = async () => {
     });
 
     try {
-        // Probar la conexión
         await sequelize.authenticate();
         console.log('Conexión a MySQL establecida correctamente.');
     } catch (error) {
         console.error('No se pudo conectar a MySQL:', error);
     }
 
-    // Definición del modelo MySQL usando Sequelize
-    const TodoSQL = sequelize.define('Todo', {
+    TodoSQL = sequelize.define('Todo', {
         task: { type: DataTypes.STRING, allowNull: false },
         completed: { type: DataTypes.BOOLEAN, defaultValue: false }
     }, { timestamps: false });
 
-    // Sincronizar modelos con la base de datos
-    await sequelize.sync(); // Esto crea las tablas si no existen
+    await sequelize.sync();
 };
 
 // Conexión a MongoDB con Mongoose
@@ -43,10 +41,10 @@ const TodoMongo = mongoose.model('Todo', new mongoose.Schema({
 }));
 
 // Métodos para MySQL y MongoDB
-const createTodosTable = async (db, dbType) => {
+const createTodosTable = async (dbType) => {
     if (dbType === 'mysql') {
         try {
-            await TodoSQL.sync(); // Sincroniza el modelo con la base de datos
+            await TodoSQL.sync();
             console.log('Tabla "Todo" creada o ya existente en MySQL.');
         } catch (err) {
             console.error('Error al crear la tabla "Todo":', err);
@@ -55,7 +53,7 @@ const createTodosTable = async (db, dbType) => {
 };
 
 // Obtener todas las tareas
-const getAllTodos = async (db, dbType) => {
+const getAllTodos = async (dbType) => {
     return dbType === 'mysql' ? TodoSQL.findAll() : TodoMongo.find();
 };
 

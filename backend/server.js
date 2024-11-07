@@ -28,7 +28,7 @@ if (DB_TYPE === 'mysql') {
     (async () => {
         try {
             await initializeMySQL(); // Asegúrate de inicializar MySQL
-            await createTodosTable(db);
+            await createTodosTable(DB_TYPE);
             console.log('OK: Tabla "todos" creada o ya existente en MySQL.');
         } catch (err) {
             console.error('Error al crear la tabla todos en MySQL:', err);

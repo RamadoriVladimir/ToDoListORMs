@@ -52,60 +52,40 @@ async function getTodos()
 }
 
 // Función para crear el botón de completar/activar
-function createToggleButton(todo, listItem) 
-{
+function createToggleButton(todo, listItem) {
     const toggleButton = document.createElement('button');
     toggleButton.classList.add('w3-button', 'w3-blue', 'w3-margin-left');
 
-    // Si la tarea está completada, aplicamos el estilo de "completado" y mostramos "Activar"
-    //Al hacer PUT en tu frontend, es una buena práctica enviar un JSON en el cuerpo de la 
-    //solicitud para hacer las modificaciones claras.
-    if (todo.completed) 
-    {
+    if (todo.completed) {
         listItem.classList.add('completed');
         toggleButton.textContent = 'Activar';
-        toggleButton.addEventListener('click', async () => 
-        {
-            try 
-            {
-                //await fetch(`http://localhost:3000/api/todos/activate/${todo.id}`, 
-                await fetch(`${apiURL}/todos/activate/${todo.id}`, 
-                {
+        toggleButton.addEventListener('click', async () => {
+            try {
+                await fetch(`${apiURL}/todos/activate/${todo.id}`, {
                     method: 'PUT',
-                    headers: {'Content-Type': 'application/json',},
-                    body: JSON.stringify({ completed: true }) // Activar
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ completed: false }) // Activa la tarea
                 });
                 getTodos();
-            } 
-            catch (error) 
-            {
+            } catch (error) {
                 console.error("Error al activar la tarea:", error);
             }
         });
-    } 
-    else 
-    {
+    } else {
         toggleButton.textContent = 'Completar';
-        toggleButton.addEventListener('click', async () => 
-        {
-            try 
-            {
-                //await fetch(`http://localhost:3000/api/todos/${todo.id}`, 
-                await fetch(`${apiURL}/todos/${todo.id}`, 
-                {
+        toggleButton.addEventListener('click', async () => {
+            try {
+                await fetch(`${apiURL}/todos/${todo.id}`, {
                     method: 'PUT',
-                    headers: {'Content-Type': 'application/json',},
-                    body: JSON.stringify({ completed: false }) // Completar la tarea
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ completed: true }) // Completa la tarea
                 });
-                getTodos(); // Recargamos las tareas
-            } 
-            catch (error) 
-            {
+                getTodos();
+            } catch (error) {
                 console.error("Error al completar la tarea:", error);
             }
         });
     }
-
     return toggleButton;
 }
 
@@ -134,28 +114,26 @@ function createDeleteButton(id)
 }
 
 // Evento para agregar una nueva tarea al enviar el input del formulario
-todoForm.addEventListener('submit', async (e) => 
-{
-    e.preventDefault();
+todoForm.addEventListener('submit', async (event) => {
+    event.preventDefault();  
 
     const task = taskInput.value.trim();
-    if (!task) return; // Evitar agregar tareas vacías
+    if (!task) return;  
 
-    try 
-    {
-        //await fetch('http://localhost:3000/api/todos', 
-        await fetch(`${apiURL}/todos`, 
-        {
+    try {
+        // Enviar la nueva tarea al backend
+        await fetch(`${apiURL}/todos`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json',},
-            body: JSON.stringify({ task }),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task })
         });
+
+        // Limpiar el campo de entrada
+        taskInput.value = '';
         
-        taskInput.value = ''; // Limpiamos el campo de entrada
-        getTodos(); // Recargamos la lista de tareas
-    } 
-    catch (error) 
-    {
+        // Recargar la lista de tareas
+        getTodos();
+    } catch (error) {
         console.error("Error al agregar la tarea:", error);
     }
 });
